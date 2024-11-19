@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fashion Forecast-My Wardrobe</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">Wardrobe Assistant</div>
+        <div class="nav-links">
+            <a href="/wardrobe">My Closet</a>
+            <a href="/outfits">Outfit</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <h3>Virtual Closet</h3>
+        <p>Number of items:<strong> <%= clothes ? clothes.length : 0 %></strong></p>
+
+    </div>
+   
+    <div class="wardrobe-gallery">
+    
+        <% if (clothes && clothes.length > 0) { %>
+            <% clothes.forEach(function(item) { %>
+                <div class="clothing-item">
+                    <img src="<%= `/uploads/wardrobe/${item.image}` %>">
+                    <div class="item-details">
+                        <p><%= item.description || '' %></p>
+                        <p>Category: <%= item.category || 'Uncategorized' %></p>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="no-items">There are no clothing items in your virtual closet. Start adding to your wardrobe!</p>
+        <% } %>
+    </div>
+
+    <!-- Add upload button -->
+    <form action="/wardrobe/add" method="POST" enctype="multipart/form-data" class="message-form">
+        <div class="form-group">
+            <label for="image">Add a new Item</label>
+            <input type="file" class="form-control-file" name="image" accept="image/*" required>
+        </div>
+        
+        <%# Will use a image recognition AI to categorise upload to color, season, occasion, and clothing type i.e top, bottom, accessor. If not, drop down form that user will manually input%>
+
+      <button type="submit" class="btn btn-primary">Add Item</button>
+    </form>
+    
+    <div class="page-footer text-center">
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+      </div>
+</body>
+</html>
+

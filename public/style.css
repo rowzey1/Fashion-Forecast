@@ -1,0 +1,63 @@
+
+img{
+    height: 200px;
+}
+
+/* Wardrobe Gallery Layout */
+.wardrobe-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Individual Clothing Item */
+.clothing-item {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Image Container */
+.clothing-item img {
+    width: 100%;
+    height: 200px; 
+    object-fit: cover; 
+    border-radius: 4px;
+    display: block;
+}
+
+/* Item Details */
+.item-details {
+    padding: 10px 0;
+}
+
+.item-details p {
+    margin: 5px 0;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Upload Form Styling */
+.message-form {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
