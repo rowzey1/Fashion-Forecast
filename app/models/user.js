@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const bcrypt   = require('bcrypt-nodejs');
 
+
 // define the schema for our user model
 const userSchema = mongoose.Schema({
 
@@ -27,6 +28,10 @@ const userSchema = mongoose.Schema({
         token        : String,
         email        : String,
         name         : String
+    },
+    location: {
+        lat: { type: Number, required: true }, // Latitude
+        lon: { type: Number, required: true }  // Longitude
     }
 
 });
@@ -40,6 +45,7 @@ userSchema.methods.generateHash = function(password) {
 userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.local.password);
 };
+
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('User', userSchema);

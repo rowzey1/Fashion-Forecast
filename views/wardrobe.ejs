@@ -63,18 +63,30 @@
 
         <div class="form-group">
           <label for="season">Season</label>
-          <select name="season" class="form-control" required>
-            <option value="">Select a season</option>
-            <option value="Spring">Spring</option>
-            <option value="Spring and Summer">Spring and Summer</option>
-            <option value="Summer">Summer</option>
-            <option value="Summer and Fall">Summer and Fall</option>
-            <option value="Fall">Fall</option>
-            <option value="Fall and Winter">Fall and Winter</option>
-            <option value="Winter">Winter</option>
-            <option value="Winter and Spring">Winter and Spring</option>
-            <option value="All seasons">All Seasons</option>
-          </select>
+          <div>
+            <label>
+              <input type="checkbox" name="season" value="Spring"  />
+              Spring
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" name="season" value="Summer"  />
+              Summer
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" name="season" value="Fall"  />
+              Fall
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" name="season" value="Winter"  />
+              Winter
+            </label>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary">Add Item</button>

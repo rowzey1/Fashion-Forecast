@@ -16,6 +16,7 @@ module.exports = {
         image: result.secure_url,
         category: req.body.category,
         season: req.body.season,
+        cloudinaryId: result.public_id,
         createdAt: new Date(),
       });
 
@@ -30,6 +31,15 @@ module.exports = {
   //Get virtual closet
   getWardrobe: async (req, res, db) => {
     try {
+      const { seasonFilter } = req.query; 
+      const query = { userId: req.user._id };
+
+      
+      if (seasonFilter) {
+        const seasons = seasonFilter.split(','); 
+        query.season = { $in: seasons }; 
+      }
+
       const clothes = await db
         .collection("clothingitems")
         .find({ userId: req.user._id })
