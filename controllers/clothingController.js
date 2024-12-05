@@ -1,14 +1,13 @@
 const path = require("path");
 const fs = require("fs");
 const cloudinary = require("../middleware/cloudinary");
-const clothingItem= require("../app/models/clothingItem")
-
+const clothingItem = require("../app/models/clothingItem");
 
 module.exports = {
   // Add a clothing item
   addClothingItem: async (req, res, db) => {
     try {
-        // Upload image to cloudinary
+      // Upload image to cloudinary
       const result = await cloudinary.uploader.upload(req.file.path);
 
       await clothingItem.create({
@@ -26,24 +25,22 @@ module.exports = {
       console.error(err);
       res.status(500).send("Error adding clothing item");
     }
-    
   },
   //Get virtual closet
   getWardrobe: async (req, res, db) => {
     try {
-      const { seasonFilter } = req.query; 
+      const { seasonFilter } = req.query;
       const query = { userId: req.user._id };
 
-      
       if (seasonFilter) {
-        const seasons = seasonFilter.split(','); 
-        query.season = { $in: seasons }; 
+        const seasons = seasonFilter.split(",");
+        query.season = { $in: seasons };
       }
 
       const clothes = await db
         .collection("clothingitems")
         .find({ userId: req.user._id })
-        .sort({ createdAt: -1 })
+        .sort({ category: 1 })
         .toArray();
 
       res.render("wardrobe.ejs", {
@@ -58,17 +55,54 @@ module.exports = {
       console.error(err);
       res.status(500).send("Error loading wardrobe");
     }
-    console.log(req.body.season)
+    console.log(req.body.season);
+  },
+  getOutfitPage: async (req, res, db) => {
+    try {
+      // Fetch user's location and weather data
+      let weather = null;
+      let location = req.user.location;
+
+      // Fetch and save location if not available
+      if (!location || !location.lat || !location.lon) {
+        try {
+          location = await GeoLocationService.getLatLon(); // Fetch location from API
+          req.user.location = location; // Update user profile with location
+          await req.user.save();
+        } catch (err) {
+          console.error("Location Error:", err.message);
+          location = { lat: 42.4125, lon: -71.0034 }; // Default set to MA
+        }
+      }
+
+      // Fetch weather data
+      if (location) {
+        weather = await WeatherService.getWeatherByLocation(
+          location.lat,
+          location.lon
+        );
+      }
+
+      // Render the outfit page with weather data
+      res.render("outfit.ejs", {
+        user: req.user,
+        weather: weather, // Pass weather data to the view
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error loading outfit page");
+    }
   },
   // Suggest outfits based on weather
   suggestOutfits: async (req, res, db) => {
     try {
-      const { temperature, conditions } = req.query;
+      const { temperature } = req.query;
+      const seasons = getSeason(parseInt(temperature));
       const suggestions = await db
-        .collection("clothes")
+        .collection("clothingitems")
         .find({
           userId: req.user._id,
-          season: getSeason(temperature),
+          season: { $in: seasons },
         })
         .toArray();
 
@@ -80,9 +114,19 @@ module.exports = {
   },
   // Helper function to determine season
   getSeason: (temperature) => {
-    if (temperature < 45) return "winter";
-    if (temperature < 65) return "spring";
-    if (temperature < 85) return "summer";
-    return "fall";
+    const seasons = [];
+    if (temperature < 45) {
+      seasons.push("Winter");
+    }
+    if (temperature >= 45 && temperature < 65) {
+      seasons.push("Spring");
+    }
+    if (temperature >= 65 && temperature < 85) {
+      seasons.push("Summer");
+    }
+    if (temperature >= 85) {
+      seasons.push("Fall");
+    }
+    return seasons;
   },
 };

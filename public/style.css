@@ -6,7 +6,7 @@ img{
 /* Wardrobe Gallery Layout */
 .wardrobe-gallery {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 20px;
     padding: 20px;
     max-width: 1200px;
@@ -25,7 +25,7 @@ img{
 /* Image Container */
 .clothing-item img {
     width: 100%;
-    height: 200px; 
+    height: 170px; 
     object-fit: cover; 
     border-radius: 4px;
     display: block;
@@ -34,6 +34,7 @@ img{
 /* Item Details */
 .item-details {
     padding: 10px 0;
+    text-align: center
 }
 
 .item-details p {

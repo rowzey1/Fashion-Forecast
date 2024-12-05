@@ -43,17 +43,19 @@
           class="form-control-file"
           name="image"
           accept="image/*"
+          capture="camera" 
           required
         />
         <div class="form-group">
           <label for="category">Category</label>
           <select name="category" class="form-control" required>
             <option value="">Select a category</option>
-            <option value="Short sleeve top">Short Sleeve Top</option>
-            <option value="Long sleeve top">Long Sleeve Top</option>
-            <option value="Long bottom">Long bottom</option>
-            <option value="Short bottom">Short bottom</option>
-            <option value="Dress">Dress</option>
+            <option value="Short Sleeve Top">Short Sleeve Top</option>
+            <option value="Long Sleeve Top">Long Sleeve Top</option>
+            <option value="Long Bottom">Long Bottom</option>
+            <option value="Short Bottom">Short Bottom</option>
+            <option value="Onepiece">Dress/Jumpsuit/Romper</option>
+            <option value="Set">Set</option>
             <option value="Outerwear">Outerwear</option>
             <option value="Shoe">Shoe</option>
             <option value="Headpiece">Headpiece</option>
@@ -95,20 +97,32 @@
 
     <div>
       <div class="wardrobe-gallery">
-        <% if (clothes && clothes.length > 0) { %> <%
-        clothes.forEach(function(item) { %>
-        <div class="clothing-item">
-          <img src="<%= item.image %>" />
-          <div class="item-details">
-            <p>Category: <%= item.category %></p>
-            <p>Season: <%= item.season %></p>
-          </div>
-        </div>
-        <% }) %> <% } else { %>
-        <p class="no-items">
-          There are no clothing items in your virtual closet. Start adding to
-          your wardrobe!
-        </p>
+        <% if (clothes && clothes.length > 0) { %>
+          <% 
+            // Group clothes by category
+            const groupedClothes = clothes.reduce((acc, item) => {
+              acc[item.category] = acc[item.category] || [];
+              acc[item.category].push(item);
+              return acc;
+            }, {});
+          %>
+          <% for (const [category, items] of Object.entries(groupedClothes)) { %>
+            <h4><%= category %></h4>
+            <% items.forEach(function(item) { %>
+              <div class="clothing-item">
+                <img src="<%= item.image %>" />
+                <div class="item-details">
+                  <p>Category: <%= item.category %></p>
+                  <p>Season: <%= item.season.join(', ') %></p> 
+                </div>
+              </div>
+            <% }) %>
+          <% } %>
+        <% } else { %>
+          <p class="no-items">
+            There are no clothing items in your virtual closet. Start adding to
+            your wardrobe!
+          </p>
         <% } %>
       </div>
     </div>

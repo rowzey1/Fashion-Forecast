@@ -81,6 +81,10 @@ module.exports = function (app, passport, db) {
     getWardrobe(req, res, db);
   });
 
+  app.get("/outfit", isLoggedIn, (req, res) => {
+    getOutfitPage(req, res, db);
+  });
+
   app.get("/outfits/suggest", isLoggedIn, (req, res) => {
     suggestOutfits(req, res, db);
   });

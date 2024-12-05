@@ -1,40 +1,50 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Fashion Forecast-Outfit Of the Day</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <nav class="navbar">
-        <img src="img/FF.jpg" alt="FF Logo">
-        <div class="nav-links">
-            <a href="/profile">Home</a>
-            <a href="/wardrobe">My Virtual Closet</a>
-            <a href="/fave">Fave's</a>
-        </div>
-        <div class="weather-widget">
-            <h3>Today's Weather</h3>
-            <div class="weather-info">
-                <!-- Weather API data will go here to display weather of the day based on location-->
-            </div>
-        </div>
+      <img src="img/FF.jpg" alt="FF Logo" />
+      <div class="nav-links">
+        <a href="/profile">Home</a>
+        <a href="/wardrobe">My Virtual Closet</a>
+        <a href="/fave">Fave's</a>
+      </div>
+      <div class="weather-widget">
+          <h3>Today's Weather</h3>
+          <div class="weather-info">
+            <% if (weather) { %>
+            <p>Temperature: <%= weather.temperature %> °F</p>
+            <p>Condition: <%= weather.condition %></p>
+            <% } else { %>
+            <p>Weather data not available.</p>
+            <% } %>
+          </div>
+      </div>
     </nav>
 
     <div class="profile-container">
-        <div class="well">
-            <div class="stat-box">
-                <h3>Outfit Of the Day</h3>
-            </div>
-
-            <div><!--To store outfit--></div>
-            
+      <div class="well">
+        <div class="stat-box">
+          <h3>Outfit Of the Day</h3>
         </div>
 
+        <div><!--To store outfit--></div>
+      </div>
     </div>
     <div class="page-footer text-center">
-        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-      </div>
-</body>
+      <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+    <script src="/js/outfit.js"></script>
+  </body>
 </html>

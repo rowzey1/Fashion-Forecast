@@ -16,7 +16,7 @@ const clothingItemSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Short sleeve top','Long sleeve top', 'Long bottom','Short bottom','Dress', 'Outerwear', 'Shoe','Headpiece', 'Accessory'],
+    enum: ['Short Sleeve Top','Long Sleeve Top', 'Long Bottom','Short Bottom','Onepiece','Set', 'Outerwear', 'Shoe','Headpiece', 'Accessory'],
     required: true,
   },
   season: {

@@ -53,7 +53,7 @@ mongoose.connect(mongoURI, {
     
     // Start the server after DB connection
     app.listen(process.env.PORT, () => {
-        console.log('The magic happens on port ' + process.env.PORT);
+        console.log('The server is running on port ' + process.env.PORT);
     });
 })
 .catch(error => {
