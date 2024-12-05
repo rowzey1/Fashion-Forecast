@@ -8,48 +8,35 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="nav-brand">Wardrobe Assistant</div>
-        <div class="nav-links">
-            <a href="/wardrobe">My Closet</a>
-            <a href="/outfits">Outfit</a>
-            <a href="/profile">Profile</a>
-            <a href="/logout">Logout</a>
+        <img src="img/FF.jpg" alt="FF Logo">
+       
+        <div class="weather-widget">
+            <h3>Today's Weather</h3>
+            <div class="weather-info">
+                <!-- Weather API data will go here to display weather of the day based on location-->
+            </div>
         </div>
     </nav>
 
     <div class="profile-container">
         <div class="well">
-            <h3>Upload Item to Virtual Closet</h3>
-            <form action="/wardrobe/add" method="POST" enctype="multipart/form-data" class="message-form">
-                <div class="form-group">
-                    <label for="image">Add Image</label>
-                    <input type="file" class="form-control-file" name="image" accept="image/*" required>
-                </div>
-                
-                <%# Will use a image recognition AI to categorise upload to color, season, occasion, and clothing type i.e top, bottom, accessor. Otherwise, drop down form that user will manually input%>
-  
-              <button type="submit" class="btn btn-primary">Add Item</button>
-            </form>
-          </div>
-
-        <div class="stats-container">
             <div class="stat-box">
-                <h3><a href="/wardrobe">Virtual Closet</a></h3>
-                <p><%= clothingCount %></p>
-            </div>
-            <div class="stat-box">
-                <h3>Outfit Of the Day</h3>
-                <p><%= outfitCount %></p>
+                <a href="/outfits">Outfit Of The Day (OOTD)</a>
             </div>
         </div>
-
-        <div class="weather-widget">
-            <h3>Today's Weather</h3>
-            <div class="weather-info">
-                <!-- Weather API data will go here to display wethe rof the day based on location-->
+        <div class="well">
+            <div class="stat-box">
+                <a href="/wardrobe">My Virtual Closet</a>
             </div>
-        </div>
+        </div>  
+        <div class="well">
+            <div class="stat-box">
+                <a href="/fave">Saved Outfits</a>
+            </div>
+        </div>      
+
     </div>
+
     <div class="page-footer text-center">
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
       </div>

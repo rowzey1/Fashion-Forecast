@@ -1,9 +1,8 @@
-require('dotenv').config();
+require('dotenv').config({ path: './config/.env' });
 const express  = require('express');
-const multer= require('multer');
 const app      = express();
-const port     = process.env.PORT || 1818;
 const MongoClient = require('mongodb').MongoClient
+const mongoURI = process.env.DB_STRING;
 const mongoose = require('mongoose');
 const passport = require('passport');
 const flash    = require('connect-flash');
@@ -40,10 +39,9 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // configuration ===============================================================
 require('./config/passport')(passport); // pass passport for configuration
 
-mongoose.connect(process.env.DB_STRING, {
+mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: process.env.DB_NAME 
 })
 .then(client => {
     console.log('Connected to MongoDB');
@@ -51,11 +49,11 @@ mongoose.connect(process.env.DB_STRING, {
     // Get the database instance
     const db = mongoose.connection;
 
-    require('./app/routes.js')(app, passport, db);
+    require('./routes/routes.js')(app, passport, db);
     
     // Start the server after DB connection
-    app.listen(port, () => {
-        console.log('The magic happens on port ' + port);
+    app.listen(process.env.PORT, () => {
+        console.log('The magic happens on port ' + process.env.PORT);
     });
 })
 .catch(error => {
@@ -63,25 +61,6 @@ mongoose.connect(process.env.DB_STRING, {
     process.exit(1); // Exit if unable to connect to database
 });
 
-
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ 
-        success: false, 
-        error: err.message || 'Internal Server Error'
-    });
-}); 
-
-const upload = multer({
-    storage: multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, 'public/uploads/wardrobe')
-        },
-        filename: (req, file, cb) => {
-            cb(null, `${Date.now()}-${file.originalname}`)
-        }
-    })
-});
 
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 
