@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const cloudinary = require("../middleware/cloudinary");
 const clothingItem = require("../app/models/clothingItem");
-const FavoriteOutfit = require("../app/models/favoriteItem");
+const FavoriteOutfit = require('../app/models/favoriteItem');
 const GeoLocationService = require("../services/geoLocationservice");
 const WeatherService = require("../services/weatherService");
 const { getSeason } = require("./seasonController");
@@ -85,7 +85,7 @@ module.exports = {
     try {
       let location = null;
       let weather = null;
-      location = await geoLocationservice.getLatLon();
+        location = await geoLocationservice.getLatLon(); 
       if (location) {
         weather = await weatherService.getWeatherByLocation(
           location.lat,
@@ -100,21 +100,18 @@ module.exports = {
         .find({ season: { $in: applicableSeasons }, userId: req.user._id })
         .toArray();
 
-      if (!clothes || clothes.length === 0) {
-        console.log(
-          "No clothes found for the applicable seasons:",
-          applicableSeasons
-        );
-        // If no clothes are available, return an empty outfit
-        return [];
-      }
+        if (!clothes || clothes.length === 0) {
+          console.log("No clothes found for the applicable seasons:", applicableSeasons);
+          // If no clothes are available, return an empty outfit
+          return [];
+        }  
 
-      console.log(clothes);
+        console.log(clothes);
 
       // Categorize clothing items
       const tops = clothes.filter(
         (item) =>
-          item.category === "Short Sleeve Top" ||
+          item.category === "Short Sleeve Top"||
           item.category === "Long Sleeve Top"
       );
       const bottoms = clothes.filter(
@@ -131,17 +128,16 @@ module.exports = {
       const outerwear = clothes.filter((item) => item.category === "Outerwear");
 
       // Create a random outfit
-      const outfit = [];
+    const outfit = [];
 
       // Randomly choose between the two options
       const chooseCombination = Math.random() < 0.5; // 50% chance to choose combination or one-piece/set
-
+  
       if (chooseCombination) {
         // Choose one top and one bottom
         if (tops.length > 0 && bottoms.length > 0) {
           const randomTop = tops[Math.floor(Math.random() * tops.length)];
-          const randomBottom =
-            bottoms[Math.floor(Math.random() * bottoms.length)];
+          const randomBottom = bottoms[Math.floor(Math.random() * bottoms.length)];
           outfit.push(randomTop, randomBottom);
         }
       } else {
@@ -150,9 +146,7 @@ module.exports = {
           // Randomly choose between one-piece and set
           const chooseOnePiece = Math.random() < 0.5;
           if (chooseOnePiece) {
-            outfit.push(
-              onePieces[Math.floor(Math.random() * onePieces.length)]
-            );
+            outfit.push(onePieces[Math.floor(Math.random() * onePieces.length)]);
           } else {
             outfit.push(sets[Math.floor(Math.random() * sets.length)]);
           }
@@ -161,34 +155,34 @@ module.exports = {
         } else if (sets.length > 0) {
           outfit.push(sets[Math.floor(Math.random() * sets.length)]);
         }
-
-        // Add shoes
-        if (shoes.length) {
-          outfit.push(shoes[Math.floor(Math.random() * shoes.length)]);
-        }
-
-        // Add headpiece
-        if (headpiece.length) {
-          outfit.push(headpiece[Math.floor(Math.random() * headpiece.length)]);
-        }
-
-        // Add accessories
-        if (accessories.length) {
-          outfit.push(
-            accessories[Math.floor(Math.random() * accessories.length)]
-          );
-        }
-
-        // Add outerwear for Fall/Winter
-        if (
-          (applicableSeasons.includes("Winter") ||
-            applicableSeasons.includes("Fall")) &&
-          outerwear.length
-        ) {
-          outfit.push(outerwear[Math.floor(Math.random() * outerwear.length)]);
-        }
-        return outfit.length ? outfit : [];
       }
+      
+
+      // Add shoes
+      if (shoes.length) {
+        outfit.push(shoes[Math.floor(Math.random() * shoes.length)]);
+      }
+
+      // Add headpiece
+      if (headpiece.length) {
+        outfit.push(headpiece[Math.floor(Math.random() * headpiece.length)]);
+      }
+
+      // Add accessories
+      if (accessories.length) {
+        outfit.push(
+          accessories[Math.floor(Math.random() * accessories.length)]
+        );
+      }
+
+      // Add outerwear for Fall/Winter
+      if (
+        (applicableSeasons.includes("Winter") || applicableSeasons.includes("Fall")) &&
+        outerwear.length
+      ) {
+        outfit.push(outerwear[Math.floor(Math.random() * outerwear.length)]);
+      }
+      return outfit.length ? outfit : [];
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Error getting suggestions" });
@@ -213,33 +207,31 @@ module.exports = {
   },
   getFavoriteOutfits: async (req, res) => {
     try {
-      const favoriteOutfits = await FavoriteOutfit.find({
-        userId: req.user._id,
-      });
-      res.render("fave.ejs", { user: req.user, favoriteOutfits });
+        const favoriteOutfits = await FavoriteOutfit.find({ userId: req.user._id });
+        res.render('fave.ejs', { user: req.user, favoriteOutfits });
     } catch (err) {
-      console.error("Error fetching favorite outfits:", err);
-      res.status(500).send("Error loading favorite outfits");
+        console.error('Error fetching favorite outfits:', err);
+        res.status(500).send('Error loading favorite outfits');
     }
-  },
+},
 
   // Save a favorite outfit
   saveFavoriteOutfit: async (req, res) => {
     try {
-      const { outfit } = req.body;
-      console.log(outfit);
+      const { outfit } = req.body; 
+      console.log(outfit)
       if (!outfit || !Array.isArray(outfit) || outfit.length === 0) {
-        return res.status(400).json({ error: "Invalid outfit data" });
-      }
+        return res.status(400).json({ error: 'Invalid outfit data' });
+    }
       const favoriteOutfit = new FavoriteOutfit({
         userId: req.user._id,
-        outfit,
+        outfit
       });
       await favoriteOutfit.save();
-      res.status(200).json({ message: "Outfit saved to favorites!" });
+      res.status(200).json({ message: 'Outfit saved to favorites!' });
     } catch (err) {
-      console.error("Error saving favorite outfit:", err);
-      res.status(500).json({ error: "Unable to save favorite outfit" });
+      console.error('Error saving favorite outfit:', err);
+      res.status(500).json({ error: 'Unable to save favorite outfit' });
     }
   },
 };
