@@ -2,6 +2,12 @@ const path = require("path");
 const fs = require("fs");
 const cloudinary = require("../middleware/cloudinary");
 const clothingItem = require("../app/models/clothingItem");
+const GeoLocationService = require("../services/geoLocationservice");
+const WeatherService = require("../services/weatherService");
+const { getSeason } = require("./seasonController");
+const { getWeather } = require("./weatherController");
+const geoLocationservice = require("../services/geoLocationservice");
+const weatherService = require("../services/weatherService");
 
 module.exports = {
   // Add a clothing item
@@ -24,6 +30,22 @@ module.exports = {
     } catch (err) {
       console.error(err);
       res.status(500).send("Error adding clothing item");
+    }
+  },
+  // Delete a clothing item
+  deleteClothingItem: async (req, res, db) => {
+    try {
+      const { ObjectId } = require("mongodb");
+      const itemId = req.params.id;
+      await db
+        .collection("clothingitems")
+        .deleteOne({ _id: new ObjectId(itemId), userId: req.user._id });
+
+      req.flash("success", "Item deleted from your closet!");
+      res.status(200).json({ message: "Item deleted successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Error deleting item" });
     }
   },
   //Get virtual closet
@@ -57,76 +79,121 @@ module.exports = {
     }
     console.log(req.body.season);
   },
-  getOutfitPage: async (req, res, db) => {
+  // Suggest outfits based on weather
+  suggestOutfits: async (req, res, db) => {
     try {
-      // Fetch user's location and weather data
+      let location = null;
       let weather = null;
-      let location = req.user.location;
-
-      // Fetch and save location if not available
-      if (!location || !location.lat || !location.lon) {
-        try {
-          location = await GeoLocationService.getLatLon(); // Fetch location from API
-          req.user.location = location; // Update user profile with location
-          await req.user.save();
-        } catch (err) {
-          console.error("Location Error:", err.message);
-          location = { lat: 42.4125, lon: -71.0034 }; // Default set to MA
-        }
-      }
-
-      // Fetch weather data
+        location = await geoLocationservice.getLatLon(); 
       if (location) {
-        weather = await WeatherService.getWeatherByLocation(
+        weather = await weatherService.getWeatherByLocation(
           location.lat,
           location.lon
         );
       }
+      const applicableSeasons = getSeason(parseInt(weather.temperature)); // Get seasons based on temperature
 
-      // Render the outfit page with weather data
-      res.render("outfit.ejs", {
-        user: req.user,
-        weather: weather, // Pass weather data to the view
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Error loading outfit page");
-    }
-  },
-  // Suggest outfits based on weather
-  suggestOutfits: async (req, res, db) => {
-    try {
-      const { temperature } = req.query;
-      const seasons = getSeason(parseInt(temperature));
-      const suggestions = await db
+      // Fetch clothing items from the database for the applicable seasons
+      const clothes = await db
         .collection("clothingitems")
-        .find({
-          userId: req.user._id,
-          season: { $in: seasons },
-        })
+        .find({ season: { $in: applicableSeasons }, userId: req.user._id })
         .toArray();
 
-      res.json(suggestions);
+        if (!clothes || clothes.length === 0) {
+          console.log("No clothes found for the applicable seasons:", applicableSeasons);
+          // If no clothes are available, return an empty outfit
+          return [];
+        }  
+
+        console.log(clothes);
+
+      // Categorize clothing items
+      const tops = clothes.filter(
+        (item) =>
+          item.category === "Short Sleeve Top"||
+          item.category === "Long Sleeve Top"
+      );
+      const bottoms = clothes.filter(
+        (item) =>
+          item.category === "Short Bottom" || item.category === "Long Bottom"
+      );
+      const onePieces = clothes.filter((item) => item.category === "Onepiece");
+      const sets = clothes.filter((item) => item.category === "Set");
+      const shoes = clothes.filter((item) => item.category === "Shoe");
+      const headpiece = clothes.filter((item) => item.category === "Headpiece");
+      const accessories = clothes.filter(
+        (item) => item.category === "Accessory"
+      );
+      const outerwear = clothes.filter((item) => item.category === "Outerwear");
+
+      // Create a random outfit
+    const outfit = [];
+
+      // Randomly choose between the two options
+      const chooseCombination = Math.random() < 0.5; // 50% chance to choose combination or one-piece/set
+  
+      if (chooseCombination) {
+        // Choose one top and one bottom
+        if (tops.length > 0 && bottoms.length > 0) {
+          const randomTop = tops[Math.floor(Math.random() * tops.length)];
+          const randomBottom = bottoms[Math.floor(Math.random() * bottoms.length)];
+          outfit.push(randomTop, randomBottom);
+        }
+      } else {
+        // Choose one one-piece or set
+        if (onePieces.length > 0) {
+          outfit.push(onePieces[Math.floor(Math.random() * onePieces.length)]);
+        } else if (sets.length > 0) {
+          outfit.push(sets[Math.floor(Math.random() * sets.length)]);
+        }
+      }
+      
+
+      // Add shoes
+      if (shoes.length) {
+        outfit.push(shoes[Math.floor(Math.random() * shoes.length)]);
+      }
+
+      // Add headpiece
+      if (headpiece.length) {
+        outfit.push(headpiece[Math.floor(Math.random() * headpiece.length)]);
+      }
+
+      // Add accessories
+      if (accessories.length) {
+        outfit.push(
+          accessories[Math.floor(Math.random() * accessories.length)]
+        );
+      }
+
+      // Add outerwear for Fall/Winter
+      if (
+        (applicableSeasons.includes("Winter") || applicableSeasons.includes("Fall")) &&
+        outerwear.length
+      ) {
+        outfit.push(outerwear[Math.floor(Math.random() * outerwear.length)]);
+      }
+      return outfit.length ? outfit : [];
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Error getting suggestions" });
     }
   },
-  // Helper function to determine season
-  getSeason: (temperature) => {
-    const seasons = [];
-    if (temperature < 45) {
-      seasons.push("Winter");
+  //Render outfit.ejs
+  getOutfitPage: async (req, res, db) => {
+    try {
+      // Fetch outfit suggestions based on weather
+      const outfits = await suggestOutfits(req, res, db); // Call the suggestOutfits function
+
+      // Render the outfit page with weather data
+      res.render("outfit.ejs", {
+        user: req.user,
+        weather: weather,
+        outfits: outfits,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error loading outfit page");
     }
-    if (temperature >= 45 && temperature < 65) {
-      seasons.push("Spring");
-    }
-    if (temperature >= 65 && temperature < 85) {
-      seasons.push("Summer");
-    }
-    if (temperature >= 85) {
-      seasons.push("Fall");
-    }
-    return seasons;
   },
 };

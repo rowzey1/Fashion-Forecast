@@ -20,31 +20,36 @@
         <a href="/wardrobe">My Virtual Closet</a>
         <a href="/fave">Fave's</a>
       </div>
-      <div class="weather-widget">
-          <h3>Today's Weather</h3>
-          <div class="weather-info">
-            <% if (weather) { %>
-            <p>Temperature: <%= weather.temperature %> °F</p>
-            <p>Condition: <%= weather.condition %></p>
-            <% } else { %>
-            <p>Weather data not available.</p>
-            <% } %>
-          </div>
-      </div>
     </nav>
 
     <div class="profile-container">
       <div class="well">
-        <div class="stat-box">
-          <h3>Outfit Of the Day</h3>
+        <h3>Outfit Of the Day</h3>
+        <div class="outfit-container">
+          <div class="stat-box">
+            <% if (outfits && outfits.length > 0) { %>
+            <ul class="outfit-list">
+              <% outfits.forEach(item => { %>
+              <li class="outfit-item">
+                <img
+                  src="<%= item.image %>"
+                  alt="<%= item.category %>"
+                  class="outfit-image"
+                />
+                <p>Category: <%= item.category %></p>
+                <p>Season: <%= item.season %></p>
+              </li>
+              <% }) %>
+            </ul>
+            <% } else { %>
+            <p>No outfits suggestions available for today.</p>
+            <% } %>
+          </div>
         </div>
-
-        <div><!--To store outfit--></div>
       </div>
     </div>
     <div class="page-footer text-center">
       <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
-    <script src="/js/outfit.js"></script>
   </body>
 </html>

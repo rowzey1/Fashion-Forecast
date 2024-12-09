@@ -43,7 +43,7 @@
           class="form-control-file"
           name="image"
           accept="image/*"
-          capture="camera" 
+          capture="camera"
           required
         />
         <div class="form-group">
@@ -67,25 +67,25 @@
           <label for="season">Season</label>
           <div>
             <label>
-              <input type="checkbox" name="season" value="Spring"  />
+              <input type="checkbox" name="season" value="Spring" />
               Spring
             </label>
           </div>
           <div>
             <label>
-              <input type="checkbox" name="season" value="Summer"  />
+              <input type="checkbox" name="season" value="Summer" />
               Summer
             </label>
           </div>
           <div>
             <label>
-              <input type="checkbox" name="season" value="Fall"  />
+              <input type="checkbox" name="season" value="Fall" />
               Fall
             </label>
           </div>
           <div>
             <label>
-              <input type="checkbox" name="season" value="Winter"  />
+              <input type="checkbox" name="season" value="Winter" />
               Winter
             </label>
           </div>
@@ -95,40 +95,43 @@
       </div>
     </form>
 
-    <div>
-      <div class="wardrobe-gallery">
-        <% if (clothes && clothes.length > 0) { %>
-          <% 
-            // Group clothes by category
-            const groupedClothes = clothes.reduce((acc, item) => {
-              acc[item.category] = acc[item.category] || [];
-              acc[item.category].push(item);
-              return acc;
-            }, {});
-          %>
-          <% for (const [category, items] of Object.entries(groupedClothes)) { %>
-            <h4><%= category %></h4>
-            <% items.forEach(function(item) { %>
-              <div class="clothing-item">
-                <img src="<%= item.image %>" />
-                <div class="item-details">
-                  <p>Category: <%= item.category %></p>
-                  <p>Season: <%= item.season.join(', ') %></p> 
+    <div class="wardrobe-gallery">
+      <% if (clothes && clothes.length > 0) { %>
+        <% 
+          // Group clothes by category
+          var groupedClothes = clothes.reduce(function(acc, item) {
+            acc[item.category] = acc[item.category] || [];
+            acc[item.category].push(item);
+            return acc;
+          }, {});
+        %>
+        <% for (var category in groupedClothes) { %>
+          <section class="category-section">
+            <h4 class="category-header"><%= category %></h4>
+            <div class="category-items"> 
+              <% groupedClothes[category].forEach(function(item) { %>          
+                <div class="clothing-item">
+                  <img src="<%= item.image %>" alt="<%= item.category %>" />            
+                  <div class="item-details">
+                    <p>Season: <%= item.season.join(', ') %></p>
+                    <button class="btn btn-danger delete-item" data-id="<%= item._id %>">Delete</button>
+                  </div>
                 </div>
-              </div>
-            <% }) %>
-          <% } %>
-        <% } else { %>
-          <p class="no-items">
-            There are no clothing items in your virtual closet. Start adding to
-            your wardrobe!
-          </p>
+              <% }) %>
+            </div> 
+          </section>
         <% } %>
-      </div>
+      <% } else { %>
+        <p class="no-items">
+          There are no clothing items in your virtual closet. Start adding to
+          your wardrobe!
+        </p>
+      <% } %>
     </div>
 
     <div class="page-footer text-center">
       <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
+    <script src="/js/wardrobe.js"></script>
   </body>
 </html>

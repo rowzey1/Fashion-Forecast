@@ -2,11 +2,14 @@ const fs = require("fs");
 const path = require("path");
 const {
   addClothingItem,
+  deleteClothingItem,
   getWardrobe,
   suggestOutfits,
+  getOutfitPage,
 } = require("../controllers/clothingController");
 const GeoLocationService = require("../services/geoLocationservice");
 const WeatherService = require("../services/weatherService");
+const weatherController = require('../controllers/weatherController');
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
@@ -81,13 +84,25 @@ module.exports = function (app, passport, db) {
     getWardrobe(req, res, db);
   });
 
-  app.get("/outfit", isLoggedIn, (req, res) => {
-    getOutfitPage(req, res, db);
+  app.delete("/wardrobe/delete/:id", isLoggedIn, (req, res) => {
+    deleteClothingItem(req, res, db); 
+  });
+
+  app.get("/outfit", isLoggedIn, async (req, res) => {
+    try {
+      const outfits = await suggestOutfits(req, res, db); // Fetch outfit suggestions
+      res.render("outfit.ejs", { user: req.user, outfits }); // Render the outfit page with suggestions
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error loading outfit suggestions");
+    }
   });
 
   app.get("/outfits/suggest", isLoggedIn, (req, res) => {
     suggestOutfits(req, res, db);
   });
+
+  app.get("/api/weather", isLoggedIn, weatherController.getWeather);
 
   // Authentication routes
   app.get("/login", (req, res) => {

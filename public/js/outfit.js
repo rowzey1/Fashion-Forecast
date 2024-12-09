@@ -1,17 +1,32 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Fetch weather data
     fetch('/api/weather') 
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             const temperature = data.temperature; 
+            const condition = data.condition;
+            const description = data.description;
+
             document.querySelector('.weather-info').innerHTML = `
                 <p>Temperature: ${temperature} °F</p>
+                <p>Condition: ${condition}</p>
+                <p>Description: ${description}</p>
             `;
 
             // Fetch outfit suggestions based on temperature
             return fetch(`/suggestOutfits?temperature=${temperature}`);
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(outfits => {
             const outfitContainer = document.querySelector('.outfit-container');
             outfitContainer.innerHTML = ''; 
@@ -32,5 +47,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 outfitContainer.innerHTML = '<p>No outfits available for today.</p>';
             }
         })
-        .catch(err => console.error('Error fetching data:', err));
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 });
+
