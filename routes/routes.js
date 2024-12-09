@@ -10,6 +10,8 @@ const {
 const GeoLocationService = require("../services/geoLocationservice");
 const WeatherService = require("../services/weatherService");
 const weatherController = require('../controllers/weatherController');
+const clothingController = require('../controllers/clothingController');
+const favoriteController = require('../controllers/favoriteController');
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 
@@ -103,6 +105,10 @@ module.exports = function (app, passport, db) {
   });
 
   app.get("/api/weather", isLoggedIn, weatherController.getWeather);
+
+  app.get("/fave", isLoggedIn, favoriteController.getFavoriteOutfits);
+
+  app.post("/favorites/save", isLoggedIn, clothingController.saveFavoriteOutfit);
 
   // Authentication routes
   app.get("/login", (req, res) => {

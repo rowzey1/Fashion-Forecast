@@ -1,54 +1,25 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Fetch weather data
-    fetch('/api/weather') 
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            const temperature = data.temperature; 
-            const condition = data.condition;
-            const description = data.description;
-
-            document.querySelector('.weather-info').innerHTML = `
-                <p>Temperature: ${temperature} °F</p>
-                <p>Condition: ${condition}</p>
-                <p>Description: ${description}</p>
-            `;
-
-            // Fetch outfit suggestions based on temperature
-            return fetch(`/suggestOutfits?temperature=${temperature}`);
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(outfits => {
-            const outfitContainer = document.querySelector('.outfit-container');
-            outfitContainer.innerHTML = ''; 
-
-            if (outfits.length > 0) {
-                outfits.forEach(outfit => {
-                    outfitContainer.innerHTML += `
-                        <div class="clothing-item">
-                            <img src="${outfit.image}" alt="${outfit.category}" />
-                            <div class="item-details">
-                                <p>Category: ${outfit.category}</p>
-                                <p>Season: ${outfit.season.join(', ')}</p>
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                outfitContainer.innerHTML = '<p>No outfits available for today.</p>';
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
+document.getElementById('save-outfit').addEventListener('click', function() {
+    const outfit = []; // Collect the outfit data from the page
+    document.querySelectorAll('.clothing-item').forEach(item => {
+        outfit.push({
+            image: item.querySelector('img').src,
+            category: item.querySelector('.item-details p:nth-child(1)').textContent.split(': ')[1],
+            season: item.querySelector('.item-details p:nth-child(2)').textContent.split(': ')[1]
         });
-});
+    });
 
+    fetch('/favorites/save', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ outfit })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+    })
+    .catch(error => {
+        console.error('Error saving outfit:', error);
+    });
+});

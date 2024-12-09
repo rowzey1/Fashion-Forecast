@@ -14,17 +14,19 @@
   </head>
   <body>
     <nav class="navbar">
-      <img src="img/FF.jpg" alt="FF Logo" />
-      <div class="nav-links">
-        <a href="/profile">Home</a>
-        <a href="/wardrobe">My Virtual Closet</a>
-        <a href="/fave">Fave's</a>
-      </div>
-    </nav>
+      <img src="img/FF.jpg" alt="FF Logo" class="mini-img"/>
 
+      <div class="nav-links">
+        <a href="/profile" class="nav-links">Home</a>
+        <a href="/wardrobe" class="nav-links">My Virtual Closet</a>
+        <!-- <a href="/fave">Fave's</a> -->
+      </div>
+    </div>
+    </nav>
     <div class="profile-container">
+      <h3>Outfit Of the Day</h3>
+
       <div class="well">
-        <h3>Outfit Of the Day</h3>
         <div class="outfit-container">
           <div class="stat-box">
             <% if (outfits && outfits.length > 0) { %>
@@ -36,8 +38,7 @@
                   alt="<%= item.category %>"
                   class="outfit-image"
                 />
-                <p>Category: <%= item.category %></p>
-                <p>Season: <%= item.season %></p>
+                
               </li>
               <% }) %>
             </ul>
@@ -45,11 +46,13 @@
             <p>No outfits suggestions available for today.</p>
             <% } %>
           </div>
+          <!-- <button id="save-outfit" class="btn btn-primary">Save to Favorites</button>  -->
         </div>
       </div>
     </div>
     <div class="page-footer text-center">
       <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
+    <script src="/js/outfit.js"></script>
   </body>
 </html>

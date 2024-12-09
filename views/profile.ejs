@@ -13,22 +13,22 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <nav class="navbar">
-      <img src="img/FF.jpg" alt="FF Logo" />
+    <nav class="profile-navbar">
+      
+      <img src="img/FF.jpg" alt="FF Logo" class="mini-image"/>
 
-      <div class="weather-widget">
-        <h3>Today's Weather</h3>
-        <div class="weather-info">
-          <% if (weather) { %>
-          <p>Temperature: <%= weather.temperature %> °F</p>
-          <p>Condition: <%= weather.condition %></p>
-          <p>Description: <%= weather.description %></p>
-          <% } else { %>
-          <p>Weather data is unavailable at the moment.</p>
-          <% } %>
-        </div>
-      </div>
+      
     </nav>
+
+    <div class="weather-widget">
+      <h3>Today's Weather</h3>
+        <% if (weather) { %>
+        <p>Temperature: <%= weather.temperature %> °F</p>
+        <p>Condition: <%= weather.condition %></p>
+        <p>Description: <%= weather.description.charAt(0).toUpperCase() + weather.description.slice(1) %></p>        <% } else { %>
+        <p>Weather data is unavailable at the moment.</p>
+        <% } %>
+    </div>
 
     <div class="profile-container">
       <div class="well">
@@ -41,15 +41,19 @@
           <a href="/wardrobe">My Virtual Closet</a>
         </div>
       </div>
+      <!--
       <div class="well">
         <div class="stat-box">
           <a href="/fave">Saved Outfits</a>
         </div>
       </div>
+    -->
     </div>
 
+    
+
     <div class="page-footer text-center">
-      <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+      <a href="/logout" class="btn">Logout</a>
     </div>
   </body>
 </html>

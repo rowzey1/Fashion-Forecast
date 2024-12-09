@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fashion Forecast - My Favorite Outfits</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <img src="img/FF.jpg" alt="FF Logo" />
+        <div class="nav-links">
+            <a href="/profile">Home</a>
+            <a href="/wardrobe">My Virtual Closet</a>
+            <a href="/outfit">Outfit Of The Day</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h3>My Favorite Outfits</h3>
+        <section class="favorite-outfits">
+        <% if (favoriteOutfits && favoriteOutfits.length > 0) { %>
+            <ul class="outfit-list">
+                <% favoriteOutfits.forEach(fav => { %>
+                    <li class="outfit-item">
+                        <h2>Outfit</h2>
+                        <ul class="clothing-list">
+                            <% fav.outfit.forEach(item => { %>
+                                <li class="clothing-item">
+                                    <img src="<%= item.image %>" alt="<%= item.category %>" class="clothing-image">
+                                    <div>
+                                        <p><strong>Category:</strong> <%= item.category %></p>
+                                        <p><strong>Season:</strong> <%= item.season %></p>
+                                    </div>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>You have no favorite outfits saved yet!</p>
+        <% } %>
+          </section>
+    </div>
+
+    <div class="page-footer text-center">
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+    <script src="/app/models/favoriteItem.js"></script>
+</body>
+</html>

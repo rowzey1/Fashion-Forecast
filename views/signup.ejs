@@ -8,9 +8,9 @@
 </head>
 <body>
     <div class="container">
-        <div class="col-sm-6 col-sm-offset-3">
+        <div class="login-container">
         
-            <h1><span class="fa fa-sign-in"></span> Signup</h1>
+            <h1><span class="fa fa-clipboard"></span> Sign Up</h1>
         
             <% if (message.length > 0) { %>
                 <div class="alert alert-danger"><%= message %></div>
@@ -27,12 +27,12 @@
                     <input type="password" class="form-control" name="password">
                 </div>
         
-                <button type="submit" class="btn btn-warning btn-lg">Signup</button>
+                <button type="submit" class="btn">Sign Up</button>
             </form>
         
             <hr>
         
-            <p>Already have an account? <a href="/login">Login</a></p>
+            <p>Already have an account? <a href="/login">Log In</a></p>
             <p>Or go <a href="/">home</a>.</p>
         
         </div>

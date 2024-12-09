@@ -9,9 +9,9 @@
 <body>
     <div class="container">
     
-        <div class="col-sm-6 col-sm-offset-3">
+        <div class="login-container">
         
-            <h1><span class="fa fa-sign-in"></span> Login</h1>
+            <h1><span class="fa fa-key"></span> Log In</h1>
         
             <% if (message.length > 0) { %>
                 <div class="alert alert-danger"><%= message %></div>
@@ -28,12 +28,12 @@
                     <input type="password" class="form-control" name="password">
                 </div>
         
-                <button type="submit" class="btn btn-warning btn-lg">Login</button>
+                <button type="submit" class="btn">Log In</button>
             </form>
         
             <hr>
         
-            <p>Need an account? <a href="/signup">Signup</a></p>
+            <p>Need an account? <a href="/signup">Sign Up</a></p>
             <p>Or go <a href="/">home</a>.</p>
         
         

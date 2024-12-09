@@ -14,14 +14,12 @@
   </head>
   <body>
     <nav class="navbar">
-      <nav class="navbar">
-        <img src="img/FF.jpg" alt="FF Logo" />
+        <img src="img/FF.jpg" alt="FF Logo" class="mini-img"/>
         <div class="nav-links">
           <a href="/profile">Home</a>
           <a href="/outfit">OOTD</a>
-          <a href="/fave">Fave's</a>
+          <!-- <a href="/fave">Fave's</a> -->
         </div>
-      </nav>
     </nav>
     <div class="profile-container">
       <h3>Virtual Closet</h3>
@@ -96,36 +94,35 @@
     </form>
 
     <div class="wardrobe-gallery">
-      <% if (clothes && clothes.length > 0) { %>
-        <% 
-          // Group clothes by category
-          var groupedClothes = clothes.reduce(function(acc, item) {
-            acc[item.category] = acc[item.category] || [];
-            acc[item.category].push(item);
-            return acc;
-          }, {});
-        %>
-        <% for (var category in groupedClothes) { %>
-          <section class="category-section">
-            <h4 class="category-header"><%= category %></h4>
-            <div class="category-items"> 
-              <% groupedClothes[category].forEach(function(item) { %>          
-                <div class="clothing-item">
-                  <img src="<%= item.image %>" alt="<%= item.category %>" />            
-                  <div class="item-details">
-                    <p>Season: <%= item.season.join(', ') %></p>
-                    <button class="btn btn-danger delete-item" data-id="<%= item._id %>">Delete</button>
-                  </div>
-                </div>
-              <% }) %>
-            </div> 
-          </section>
-        <% } %>
-      <% } else { %>
-        <p class="no-items">
-          There are no clothing items in your virtual closet. Start adding to
-          your wardrobe!
-        </p>
+      <% if (clothes && clothes.length > 0) { %> <% // Group clothes by category
+      var groupedClothes = clothes.reduce(function(acc, item) {
+      acc[item.category] = acc[item.category] || [];
+      acc[item.category].push(item); return acc; }, {}); %> <% for (var category
+      in groupedClothes) { %>
+      <section class="category-section">
+        <h4 class="category-header"><%= category %></h4>
+        <div class="category-items">
+          <% groupedClothes[category].forEach(function(item) { %>
+          <div class="clothing-item">
+            <img src="<%= item.image %>" alt="<%= item.category %>" />
+            <div class="item-details">
+              <p>Season: <%= item.season.join(', ') %></p>
+              <button
+                class="btn btn-danger delete-item"
+                data-id="<%= item._id %>"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+      </section>
+      <% } %> <% } else { %>
+      <p class="no-items">
+        There are no clothing items in your virtual closet. Start adding to your
+        wardrobe!
+      </p>
       <% } %>
     </div>
 
