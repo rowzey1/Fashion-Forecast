@@ -43,14 +43,12 @@ module.exports = function(passport) {
     },
     async function(req, email, password, done) {
         try {
-            console.log('Request body:', req.body); // Log the request body
 
         if (!email) {
             return done(null, false, req.flash('signupMessage', 'Email is required.'));
         }
 
             const username = req.body.username || email; // Use email as fallback
-            console.log('Checking for existing user with email:', email, 'or username:', username);
             const existingUser = await User.findOne({ 
                 $or: [
                     { 'local.email': email },
@@ -59,7 +57,6 @@ module.exports = function(passport) {
             });
 
             if (existingUser) {
-                console.log('Existing user found:', existingUser);
                 return done(null, false, req.flash('signupMessage', 'That email or username is already taken.'));
             }
 
@@ -69,10 +66,8 @@ module.exports = function(passport) {
             newUser.local.username = username
 
             await newUser.save();
-            console.log('New user created:', newUser);
             return done(null, newUser);
         } catch (err) {
-            console.error('Error during signup:', err);
             return done(err);
         }
     }));
@@ -84,16 +79,16 @@ module.exports = function(passport) {
     // by default, if there was no name, it would just be called 'local'
 
     passport.use('local-login', new LocalStrategy({
-        usernameField : 'email',
+        usernameField : 'emailOrUsername',
         passwordField : 'password',
         passReqToCallback : true
     },
-    async function(req, email, password, done) {
+    async function(req, emailOrUsername, password, done) {
         try {
             const user = await User.findOne({ 
                 $or: [
-                    { 'local.email': email },
-                    { 'local.username': email }
+                    { 'local.email': emailOrUsername },
+                    { 'local.username': emailOrUsername }
                 ]
             });
 
