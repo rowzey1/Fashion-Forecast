@@ -7,9 +7,9 @@ Fashion Forecast is a web application that helps users plan their outfits based 
 <img src="https://github.com/user-attachments/assets/8318dab1-2f19-4742-87c9-06867b32fcc6">
 
 <p float=left>
-<img src="https://github.com/user-attachments/assets/3d728209-ae8e-402a-9c06-ddb63db99ea9" width="33.3%" height="500">
-<img src="https://github.com/user-attachments/assets/1a5dde43-3b5c-4b3b-83cf-7f8b1b941aa0" width="33.3%" height="500">
-<img src="https://github.com/user-attachments/assets/085b002e-94ef-4ba6-8b3d-a58acba914f9" width="33.3%" height="500">
+<img src="https://github.com/user-attachments/assets/3d728209-ae8e-402a-9c06-ddb63db99ea9" width="250" height="500">
+<img src="https://github.com/user-attachments/assets/1a5dde43-3b5c-4b3b-83cf-7f8b1b941aa0" width="250" height="500">
+<img src="https://github.com/user-attachments/assets/085b002e-94ef-4ba6-8b3d-a58acba914f9" width="250" height="500">
 </p>
 
 ## Table of Contents
