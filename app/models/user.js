@@ -6,10 +6,21 @@ const bcrypt   = require('bcrypt-nodejs');
 // define the schema for our user model
 const userSchema = mongoose.Schema({
 
-    local            : {
-        username     : String,
-        email        : String,
-        password     : String
+    local: {
+        username: {
+            type: String,
+            unique: true, // Ensure username is unique
+            sparse: true  // Allow null values to not conflict with unique constraint
+        },
+        email: {
+            type: String,
+            unique: true, // Ensure email is unique
+            required: true
+        },
+        password: {
+            type: String,
+            required: true
+        }
     },
     facebook         : {
         id           : String,
@@ -29,10 +40,7 @@ const userSchema = mongoose.Schema({
         email        : String,
         name         : String
     },
-    location: {
-        lat: { type: Number, required: true }, // Latitude
-        lon: { type: Number, required: true }  // Longitude
-    }
+   
 
 });
 

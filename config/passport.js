@@ -43,25 +43,36 @@ module.exports = function(passport) {
     },
     async function(req, email, password, done) {
         try {
+            console.log('Request body:', req.body); // Log the request body
+
+        if (!email) {
+            return done(null, false, req.flash('signupMessage', 'Email is required.'));
+        }
+
+            const username = req.body.username || email; // Use email as fallback
+            console.log('Checking for existing user with email:', email, 'or username:', username);
             const existingUser = await User.findOne({ 
                 $or: [
                     { 'local.email': email },
-                    { 'local.username': req.body.username }
+                    { 'local.username': username }
                 ]
             });
 
             if (existingUser) {
+                console.log('Existing user found:', existingUser);
                 return done(null, false, req.flash('signupMessage', 'That email or username is already taken.'));
             }
 
             const newUser = new User();
             newUser.local.email = email;
             newUser.local.password = newUser.generateHash(password);
-            newUser.local.username = req.body.username || email;
+            newUser.local.username = username
 
             await newUser.save();
+            console.log('New user created:', newUser);
             return done(null, newUser);
         } catch (err) {
+            console.error('Error during signup:', err);
             return done(err);
         }
     }));
