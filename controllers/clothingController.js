@@ -134,6 +134,11 @@ module.exports = {
       const chooseCombination = Math.random() < 0.5; // 50% chance to choose combination or one-piece/set
   
       if (chooseCombination) {
+        // Add headpiece
+      if (headpiece.length) {
+        outfit.push(headpiece[Math.floor(Math.random() * headpiece.length)]);
+      }
+      
         // Choose one top and one bottom
         if (tops.length > 0 && bottoms.length > 0) {
           const randomTop = tops[Math.floor(Math.random() * tops.length)];
@@ -163,10 +168,6 @@ module.exports = {
         outfit.push(shoes[Math.floor(Math.random() * shoes.length)]);
       }
 
-      // Add headpiece
-      if (headpiece.length) {
-        outfit.push(headpiece[Math.floor(Math.random() * headpiece.length)]);
-      }
 
       // Add accessories
       if (accessories.length) {
