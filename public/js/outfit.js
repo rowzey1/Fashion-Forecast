@@ -1,12 +1,23 @@
 document.getElementById('save-outfit').addEventListener('click', function() {
     const outfit = []; // Collect the outfit data from the page
-    document.querySelectorAll('.clothing-item').forEach(item => {
-        outfit.push({
-            image: item.querySelector('img').src,
-            category: item.querySelector('.item-details p:nth-child(1)').textContent.split(': ')[1],
-            season: item.querySelector('.item-details p:nth-child(2)').textContent.split(': ')[1]
-        });
+    const outfitItems = document.querySelectorAll('.outfit-item');
+
+    outfitItems.forEach(item => {
+        const imageElement = item.querySelector('img');
+        
+
+        if (imageElement) {
+            outfit.push({
+                image: imageElement.src,
+                
+            });
+        }
     });
+
+    if (outfit.length === 0) {
+        alert('No outfit data found to save.');
+        return;
+    }
 
     fetch('/favorites/save', {
         method: 'POST',
@@ -17,9 +28,20 @@ document.getElementById('save-outfit').addEventListener('click', function() {
     })
     .then(response => response.json())
     .then(data => {
-        alert(data.message);
+        if (data.message) {
+            alert(data.message);
+        } else {
+            alert('Failed to save outfit.');
+        }
     })
     .catch(error => {
         console.error('Error saving outfit:', error);
+        alert('An error occurred while saving the outfit.');
     });
 });
+
+
+
+document.getElementById('reload-outfit').addEventListener('click', function() {
+    location.reload(); 
+  });

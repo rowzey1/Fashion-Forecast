@@ -5,7 +5,6 @@ const {
   deleteClothingItem,
   getWardrobe,
   suggestOutfits,
-  getOutfitPage,
 } = require("../controllers/clothingController");
 const GeoLocationService = require("../services/geoLocationservice");
 const WeatherService = require("../services/weatherService");
@@ -108,7 +107,9 @@ module.exports = function (app, passport, db) {
 
   app.get("/fave", isLoggedIn, favoriteController.getFavoriteOutfits);
 
-  app.post("/favorites/save", isLoggedIn, clothingController.saveFavoriteOutfit);
+  app.post("/favorites/save", isLoggedIn, favoriteController.saveFavoriteOutfit);
+
+  app.delete("/favorites/delete/:id", isLoggedIn, favoriteController.deleteFavoriteOutfit);
 
   // Authentication routes
   app.get("/login", (req, res) => {

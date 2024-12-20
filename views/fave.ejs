@@ -5,36 +5,36 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
     <link rel="stylesheet" href="style.css" />
+  
 </head>
 <body>
     <nav class="navbar">
-        <img src="img/FF.jpg" alt="FF Logo" />
+        <img src="img/FF.jpg" alt="FF Logo" class="mini-img" />
         <div class="nav-links">
             <a href="/profile">Home</a>
             <a href="/wardrobe">My Virtual Closet</a>
             <a href="/outfit">Outfit Of The Day</a>
         </div>
     </nav>
+    <h3>My Favorite Outfits</h3>
 
-    <div class="container">
-        <h3>My Favorite Outfits</h3>
+    <div class="fave-container">
+
+        <div class="outfit-container">
         <section class="favorite-outfits">
         <% if (favoriteOutfits && favoriteOutfits.length > 0) { %>
-            <ul class="outfit-list">
+            <ul class="fave-list">
                 <% favoriteOutfits.forEach(fav => { %>
-                    <li class="outfit-item">
-                        <h2>Outfit</h2>
+                    <li class="fave-item">
                         <ul class="clothing-list">
                             <% fav.outfit.forEach(item => { %>
-                                <li class="clothing-item">
+                                <li class="outfit-item">
                                     <img src="<%= item.image %>" alt="<%= item.category %>" class="clothing-image">
-                                    <div>
-                                        <p><strong>Category:</strong> <%= item.category %></p>
-                                        <p><strong>Season:</strong> <%= item.season %></p>
-                                    </div>
+                                    
                                 </li>
                             <% }) %>
                         </ul>
+                        <button class="delete-button" data-id="<%= fav._id %>">Delete Outfit</button>
                     </li>
                 <% }) %>
             </ul>
@@ -43,10 +43,11 @@
         <% } %>
           </section>
     </div>
-
-    <div class="page-footer text-center">
+  
+    </div>
+        <div class="page-footer text-center">
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
-    <script src="/app/models/favoriteItem.js"></script>
+    <script src="/js/fave.js"></script>
 </body>
 </html>

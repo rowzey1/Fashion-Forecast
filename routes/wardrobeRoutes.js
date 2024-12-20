@@ -1,6 +1,6 @@
 const express = require('express');
 const { addClothingItem, getWardrobe, suggestOutfits, deleteClothingItem,suggestOutfits,
-    getOutfitPage, } = require('../controllers/clothingController');
+} = require('../controllers/clothingController');
 const isLoggedIn = require('../Fashion-Forecast/middleware/auth'); 
 const GeoLocationService = require("../services/geoLocationservice");
 const WeatherService = require("../services/weatherService");
